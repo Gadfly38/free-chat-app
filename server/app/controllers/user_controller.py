@@ -28,14 +28,17 @@ async def sign_up(user:UserSignUpModel):
         raise HTTPException(status_code=500, detail=str(e))
 
 async def sign_in(user:UserSignInModel):
+    print("Okay, I'm here!!!!!!!!!!!!!!!!!!!")
     try:
         existing_user = supabase.table('users').select("*").eq('email', user.email).execute()
-
+        
         if not existing_user.data:
             raise HTTPException(status_code=400, detail="Email not found")
-            
+            return
+
         if existing_user.data[0]["password"] != user.password:
             raise HTTPException(status_code=400, detail="Incorrect Password")
+            return
 
         return {"message": "SignIn successfully", "user": existing_user.data[0]}
     except Exception as e:

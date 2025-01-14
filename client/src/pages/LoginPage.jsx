@@ -14,7 +14,7 @@ const loginSchema = yup.object().shape({
     .required("Email is required"),
   password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
+    .min(4, "Password must be at least 4 characters")
     .required("Password is required"),
   rememberMe: yup.boolean(),
 });
@@ -44,38 +44,9 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    await loginSchema.validate(formData, { abortEarly: false });
+    console.log(formData);
     dispatch(login(formData));
-    try {
-      await loginSchema.validate(formData, { abortEarly: false });
-
-      const response = await api.post(`/auth/signin`, formData);
-
-      console.log(response.data);
-
-      if (response.data.status === "success") {
-        // Store user data and token
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
-
-        console.log("Login successful:", response.data);
-        navigate("/app/chat");
-      }
-    } catch (err) {
-      if (err.response?.data) {
-        // Handle server error response
-        setErrors({
-          email: err.response.data.message,
-        });
-      } else if (err.inner) {
-        // Handle validation errors
-        const newErrors = {};
-        err.inner.forEach((error) => {
-          newErrors[error.path] = error.message;
-        });
-        setErrors(newErrors);
-      }
-    }
   };
 
   return (

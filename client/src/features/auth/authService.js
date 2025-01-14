@@ -1,7 +1,7 @@
 import api from "@/api/axios";
 
 const register = async (userData) => {
-  const response = await api.post("/auth/register", userData);
+  const response = await api.post("/auth/signup", userData);
   if (response.data) {
     localStorage.setItem("user", JSON.stringify(response.data));
   }
@@ -9,7 +9,7 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-  const response = await api.post("/auth/login", userData);
+  const response = await api.post("/auth/signin", userData);
   if (response.data) {
     localStorage.setItem("user", JSON.stringify(response.data));
   }

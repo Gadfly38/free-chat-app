@@ -7,3 +7,4 @@ class UserSignUpModel(BaseModel):
 class UserSignInModel(BaseModel):
     email:str
     password:str
+    rememberMe:bool=False
