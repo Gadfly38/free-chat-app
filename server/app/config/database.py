@@ -1,0 +1,7 @@
+# app/config/database.py
+from supabase import create_client
+
+SUPABASE_URL = "https://copkwtgwjpbizwzwjnwd.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvcGt3dGd3anBiaXp3endqbndkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4NDY4MDgsImV4cCI6MjA1MjQyMjgwOH0.TGNWw6NXkDTuLyS7j_snGsQfYXevKdgfKqIi9DJRFsE"
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
