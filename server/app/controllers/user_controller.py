@@ -3,6 +3,8 @@ from datetime import datetime
 from uuid import UUID
 from google.auth.transport import requests
 from google.oauth2 import id_token
+import httpx
+from jose import jwt 
 
 from app.config.database import supabase
 from app.models.user_model import UserSignUpModel, UserSignInModel, TokenModel
@@ -10,7 +12,53 @@ from app.config.utils import create_refresh_token, create_access_token, decode_t
 
 GOOGLE_CLIENT_ID = "302085187214-9scjmt2cbrdqf5uuj6q62ivpr5m0u9no.apps.googleusercontent.com"
 
-async def google_sign_in(token:TokenModel):
+async def google_sign_in(token: TokenModel):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"https://oauth2.googleapis.com/tokeninfo?access_token={token.token}"
+            )
+            if response.status_code != 200:
+                return {
+                    "status": "error",
+                    "message": "Invalid access token"
+                }
+            token_info = response.json()
+            if token_info.get('aud') != GOOGLE_CLIENT_ID:
+                return {
+                    "status": "error",
+                    "message": "Invalid token audience"
+                }
+            user_info_response = await client.get(
+                "https://www.googleapis.com/oauth2/v2/userinfo",
+                headers={"Authorization": f"Bearer {token.token}"}
+            )
+            
+            if user_info_response.status_code != 200:
+                return {
+                    "status": "error",
+                    "message": "Could not fetch user information"
+                }
+            user_info = user_info_response.json()
+            email = user_info.get('email')
+            access_token = create_access_token(data={"sub": email})
+            
+            return {
+                "status": "success",
+                "user": {
+                    "email": email,
+                    "name": user_info.get('name'),
+                    "picture": user_info.get('picture')
+                },
+                "token": access_token
+            }
+    
+    except Exception as e:
+        print(f"Google Sign-In Error: {str(e)}")
+        return {
+            "status": "error",
+            "message": "Authentication failed"
+        }
     try:
         token_str = token.token
         id_info = id_token.verify_oauth2_token(
@@ -72,8 +120,6 @@ async def sign_up(user:UserSignUpModel):
                 "status" : "error",
                 "message" : "Oh! Registration failed."
             }
-    except HTTPException as he:
-        raise he
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -112,9 +158,6 @@ async def sign_in(user:UserSignInModel):
             })
 
         return response
-
-    except HTTPException as he:
-        raise he
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
