@@ -3,12 +3,15 @@ from datetime import datetime
 from uuid import UUID
 from google.auth.transport import requests
 from google.oauth2 import id_token
+import os
+from dotenv import load_dotenv
 
 from app.config.database import supabase
 from app.models.user_model import UserSignUpModel, UserSignInModel, TokenModel
 from app.config.utils import create_refresh_token, create_access_token, decode_token, hash_password, verify_password
 
-GOOGLE_CLIENT_ID = "302085187214-36vpti1rbqfjtdgafn83k6vcjcmnvetf.apps.googleusercontent.com"
+load_dotenv()
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 async def google_sign_in(token:TokenModel):
     try:
