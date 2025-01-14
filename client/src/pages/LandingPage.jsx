@@ -5,7 +5,7 @@ import {
   useGoogleLogin,
   GoogleLogin,
 } from "@react-oauth/google";
-import GoogleSignButton from "@/components/GoogleSignButton";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import FeatureCard from "@/components/FeatureCard";
 import { FileText, MessageSquare, Settings } from "lucide-react";
 
@@ -64,7 +64,7 @@ const LandingPage = () => {
       </div>
 
       <div className="space-y-8 mt-12 w-full max-w-80 ">
-        <GoogleSignButton content="Sign in with Google" color="blue" />
+        <GoogleSignInButton content="Sign in with Google" color="blue" />
 
         <button
           className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gray-300 text-black text-xl rounded hover:bg-gray-400 transition-colors"

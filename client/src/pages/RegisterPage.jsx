@@ -1,5 +1,5 @@
 import api from "@/api/axios";
-import GoogleSignButton from "@/components/GoogleSignButton";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,14 +12,13 @@ const registerSchema = yup.object().shape({
     .required("Email is required"),
   password: yup
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[0-9]/, "Password must contain at least one number")
+    .min(4, "Password must be at least 4 characters")
     .required("Password is required"),
 });
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -114,7 +113,7 @@ const RegisterPage = () => {
               or sign up with
             </span>
           </div>
-          <GoogleSignButton content="Google" color="blue" />
+          <GoogleSignInButton content="Google" color="blue" />
 
           <div className="flex flex-row justify-center mt-6 gap-2">
             <p>Already have an account?</p>

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/features/auth/authSlice";
 import * as yup from "yup";
 import api from "@/api/axios";
-import GoogleSignButton from "@/components/GoogleSignButton";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import axios from "axios";
 
 const loginSchema = yup.object().shape({
@@ -14,7 +14,7 @@ const loginSchema = yup.object().shape({
     .required("Email is required"),
   password: yup
     .string()
-    .min(4, "Password must be at least 4 characters")
+    .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
   rememberMe: yup.boolean(),
 });
@@ -54,7 +54,7 @@ const LoginPage = () => {
       <div className="bg-white p-8 w-full h-screen md:w-2/3 md:bg-gray-100">
         <div className="max-w-[400px] mx-auto mt-5 md:mt-56">
           <h2 className="text-4xl font-bold mb-12 text-center">Log In</h2>
-          <GoogleSignButton content="Sign in with Google" color="blue" />
+          <GoogleSignInButton content="Sign in with Google" color="blue" />
           <div className="border-b border-gray-300 leading-[0.1em] text-center my-8">
             <span className="px-4 bg-white md:bg-gray-100">Or</span>
           </div>
