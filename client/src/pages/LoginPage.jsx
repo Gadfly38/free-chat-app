@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/features/auth/authSlice";
 import * as yup from "yup";
 import api from "@/api/axios";
 import GoogleSignButton from "@/components/GoogleSignButton";
@@ -19,6 +21,8 @@ const loginSchema = yup.object().shape({
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,6 +44,8 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    dispatch(login(formData));
     try {
       await loginSchema.validate(formData, { abortEarly: false });
 
