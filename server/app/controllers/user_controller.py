@@ -77,7 +77,9 @@ async def sign_up(user:UserSignUpModel):
         raise he
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={
+            "message" : str(e)
+        })
 
 async def sign_in(user:UserSignInModel):
     try:
@@ -116,4 +118,6 @@ async def sign_in(user:UserSignInModel):
         raise he
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail={
+            "message" : str(e)
+        })
