@@ -2,9 +2,7 @@ import api from "@/api/axios";
 
 const register = async (userData) => {
   const response = await api.post("/auth/signup", userData);
-  if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
-  }
+  console.log("response----------", response);
   return response.data;
 };
 

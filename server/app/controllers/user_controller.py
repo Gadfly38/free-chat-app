@@ -72,6 +72,9 @@ async def sign_up(user:UserSignUpModel):
             raise HTTPException(status_code=400, detail={
                 "message" : "Oh! Registration failed."
             })
+            
+    except HTTPException as he:
+        raise he
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -22,13 +22,15 @@ const loginSchema = yup.object().shape({
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
+  const message = useSelector((state) => state.auth.message);
+  const success = useSelector((state) => state.auth.isSuccess);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -44,9 +46,21 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await loginSchema.validate(formData, { abortEarly: false });
-    console.log(formData);
-    dispatch(login(formData));
+    try {
+      await loginSchema.validate(formData, { abortEarly: false });
+      dispatch(login(formData));
+    } catch (err) {
+      console.log("err", err);
+      const newErrors = {};
+      err.inner.forEach((error) => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+    }
+    console.log(success);
+    if (success) {
+      navigate("/app/chat");
+    }
   };
 
   return (
@@ -87,6 +101,9 @@ const LoginPage = () => {
               />
               {errors.password && (
                 <p className="mt-1 text-red-500 text-sm">{errors.password}</p>
+              )}
+              {message && (
+                <p className="mt-1 text-red-500 text-sm">{message}</p>
               )}
             </div>
             <div className="flex items-center justify-between mb-8">

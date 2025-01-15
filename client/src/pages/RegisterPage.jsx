@@ -1,8 +1,9 @@
 import api from "@/api/axios";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { register } from "@/features/auth/authSlice";
 import * as yup from "yup";
 
 const registerSchema = yup.object().shape({
@@ -18,6 +19,7 @@ const registerSchema = yup.object().shape({
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -41,13 +43,7 @@ const RegisterPage = () => {
 
     try {
       await registerSchema.validate(formData, { abortEarly: false });
-      const response = await api.post("/auth/signup", formData);
-      console.log("formedaata", formData);
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        navigate("/app/chat");
-      }
-      console.log("Form submitted:", response.data);
+      dispatch(register(formData));
     } catch (err) {
       const newErrors = {};
       err.inner.forEach((error) => {
