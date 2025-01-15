@@ -3,6 +3,7 @@ import authService from "./authService";
 
 const initialState = {
   user: null,
+  token: null,
   isLoading: false,
   isError: false,
   isSuccess: false,
@@ -54,7 +55,7 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
@@ -63,11 +64,14 @@ const authSlice = createSlice({
       })
       .addCase(login.pending, (state) => {
         state.isLoading = true;
+        state.message = "";
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.accessToken;
+        state.message = action.payload.message;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;

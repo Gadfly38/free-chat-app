@@ -18,20 +18,6 @@ const GoogleSignInButton = ({ content, color }) => {
     console.error("Login Failed");
   };
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      // fetching userinfo can be done on the client or the server
-      const userInfo = await axios
-        .get("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        })
-        .then((res) => res.data);
-
-      console.log("userInfo_-_---", userInfo);
-    },
-  });
-
   return (
     <div className="google-button">
       <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
