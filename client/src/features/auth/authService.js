@@ -11,7 +11,8 @@ const register = async (userData) => {
 const login = async (userData) => {
   const response = await api.post("/auth/signin", userData);
   if (response.data) {
-    localStorage.setItem("user", JSON.stringify(response.data));
+    console.log("dfdsfsfs", response.data);
+    localStorage.setItem("token", JSON.stringify(response.data.accessToken));
   }
   return response.data;
 };
