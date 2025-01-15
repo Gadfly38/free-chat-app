@@ -15,6 +15,12 @@ const login = async (userData) => {
   return response.data;
 };
 
+const googleLogin = async (payload) => {
+  const response = await api.post("/auth/google", payload);
+  console.log("response----------", response.data);
+  return response.data;
+};
+
 const logout = () => {
   localStorage.removeItem("user");
 };
@@ -22,6 +28,7 @@ const logout = () => {
 const authService = {
   register,
   login,
+  googleLogin,
   logout,
 };
 

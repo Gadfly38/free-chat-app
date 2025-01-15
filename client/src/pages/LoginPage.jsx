@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "@/features/auth/authSlice";
+import { login, reset } from "@/features/auth/authSlice";
 import * as yup from "yup";
 import api from "@/api/axios";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
@@ -23,14 +23,24 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [errors, setErrors] = useState({});
-  const message = useSelector((state) => state.auth.message);
-  const success = useSelector((state) => state.auth.isSuccess);
+
+  const { isError, message, isSuccess } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
+
+  useEffect(() => {
+    dispatch(reset());
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/app/chat");
+    }
+  }, [isSuccess]);
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -57,10 +67,7 @@ const LoginPage = () => {
       });
       setErrors(newErrors);
     }
-    console.log(success);
-    if (success) {
-      navigate("/app/chat");
-    }
+    console.log(isSuccess);
   };
 
   return (
@@ -102,7 +109,7 @@ const LoginPage = () => {
               {errors.password && (
                 <p className="mt-1 text-red-500 text-sm">{errors.password}</p>
               )}
-              {message && (
+              {isError && message && (
                 <p className="mt-1 text-red-500 text-sm">{message}</p>
               )}
             </div>

@@ -1,9 +1,9 @@
 import api from "@/api/axios";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register } from "@/features/auth/authSlice";
+import { register, reset } from "@/features/auth/authSlice";
 import * as yup from "yup";
 
 const registerSchema = yup.object().shape({
@@ -20,12 +20,18 @@ const registerSchema = yup.object().shape({
 const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const message = useSelector((state) => state.auth.message);
+  const success = useSelector((state) => state.auth.isSuccess);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    dispatch(reset());
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -50,6 +56,9 @@ const RegisterPage = () => {
         newErrors[error.path] = error.message;
       });
       setErrors(newErrors);
+    }
+    if (success) {
+      navigate("/app/auth/login");
     }
   };
 
@@ -89,6 +98,9 @@ const RegisterPage = () => {
               />
               {errors.password && (
                 <p className="mt-1 text-red-500 text-sm">{errors.password}</p>
+              )}
+              {message && (
+                <p className="mt-1 text-red-500 text-sm">{message}</p>
               )}
             </div>
 

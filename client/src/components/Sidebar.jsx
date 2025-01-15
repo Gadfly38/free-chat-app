@@ -7,6 +7,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+``;
+import { useDispatch } from "react-redux";
+import { logout } from "@/features/auth/authSlice";
 import UserAvatar from "@/components/UserAvatar";
 // import AnimatedButton from "./AnimatedButton";
 
@@ -15,30 +18,18 @@ const Sidebar = () => {
     return window.innerWidth >= 768; // Initialize true for md breakpoint and above
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation(); // Add this hook
 
   const isActive = (path) => location.pathname === path;
 
   const handleSignOut = async () => {
     try {
-      // Call backend to invalidate token (optional)
-      await api.post("/api/auth/logout");
-
-      // Clear local storage
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
-      // Update auth context
-      logout();
-
+      dispatch(logout());
       // Redirect to login page
       navigate("/app/auth/login");
     } catch (error) {
       console.error("Logout error:", error);
-      // Even if the API call fails, we still want to log out locally
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      navigate("/app/auth/login");
     }
   };
   return (
