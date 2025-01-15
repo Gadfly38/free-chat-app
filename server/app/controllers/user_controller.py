@@ -24,10 +24,9 @@ async def google_sign_in(token:TokenModel):
         )
 
         if id_info["aud"] != GOOGLE_CLIENT_ID:
-            return {
-                "status": "error",
+            raise HTTPException(status_code=400, detail={
                 "message": "Invalid Audience"
-            }
+            })
 
         email = id_info.get("email")
         access_token = create_access_token(data={"sub": email})
@@ -40,20 +39,18 @@ async def google_sign_in(token:TokenModel):
             "token": access_token
         }
     except ValueError as e:
-        return {
-            "status": "error",
+        raise HTTPException(status_code=400, detail={
             "message": "Authentication Failed"
-        }
+        })
 
 async def sign_up(user:UserSignUpModel):
     try:
         existing_user = supabase.table('users').select("*").eq('email', user.email).execute()
         
         if existing_user.data:
-            return {
-                "status" : "error",
+            raise HTTPException(status_code=400, detail={
                 "message" : "Email already exists or invalid input."
-            }
+            })
         
         new_user = {
             "email": user.email,
@@ -72,10 +69,9 @@ async def sign_up(user:UserSignUpModel):
                 }
             }
         else:
-            return {
-                "status" : "error",
+            raise HTTPException(status_code=400, detail={
                 "message" : "Oh! Registration failed."
-            }
+            })
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -85,16 +81,14 @@ async def sign_in(user:UserSignInModel):
         existing_user = supabase.table('users').select("*").eq('email', user.email).execute()
         
         if not existing_user.data:
-            return {
-                "status" : "error",
+            raise HTTPException(status_code=400, detail={
                 "message" : "Email not found"
-            }
+            })
 
         if existing_user.data[0]["password"] != user.password:
-            return {
-                "status" : "error",
+            raise HTTPException(status_code=400, detail={
                 "message" : "Incorrect Password"
-            }
+            })
 
         access_token = create_access_token(data={"sub": existing_user.data[0]['email']})
         response = {
@@ -114,6 +108,9 @@ async def sign_in(user:UserSignInModel):
             })
 
         return response
+
+    except HTTPException as he:
+        raise he
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
