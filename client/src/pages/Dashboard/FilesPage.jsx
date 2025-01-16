@@ -3,6 +3,7 @@ import { HelpCircle } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { Cloud, Loader2, X } from "lucide-react";
 import api from "@/api/axios";
+import { useSelector } from "react-redux";
 
 const GOOGLE_API_KEY = "AIzaSyBnI1BtaTCsvh0XvaVOuuU-9xITXtGI0vc";
 const GOOGLE_CLIENT_ID =
@@ -16,9 +17,7 @@ const FilesPage = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const userInfo = localStorage.getItem("user");
-  const userData = JSON.parse(userInfo);
-  const userId = userData.id;
+  const userId = useSelector((state) => state.auth.user.id);
   const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {

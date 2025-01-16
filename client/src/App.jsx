@@ -5,16 +5,14 @@ import {
   Outlet,
 } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
-import FilesPage from "./pages/FilesPage";
-import ChatPage from "./pages/ChatPage";
+import FilesPage from "./pages/Dashboard/FilesPage";
+import ChatPage from "./pages/Dashboard/ChatPage";
 import Sidebar from "./components/Sidebar";
-import SettingsPage from "./pages/SettingsPage";
-import UpgradePlanPage from "./pages/UpgradePlanPage";
+import SettingsPage from "./pages/Dashboard/SettingsPage";
+import UpgradePlanPage from "./pages/Dashboard/UpgradePlanPage";
 
 const DashboardLayout = () => {
   return (
@@ -37,7 +35,6 @@ const App = () => (
 
         {/* Protected routes with Sidebar */}
         <Route element={<DashboardLayout />}>
-          <Route path="/app/dashboard" element={<DashboardPage />} />
           <Route path="/app/files" element={<FilesPage />} />
           <Route path="/app/chat" element={<ChatPage />} />
           <Route path="/app/settings" element={<SettingsPage />} />

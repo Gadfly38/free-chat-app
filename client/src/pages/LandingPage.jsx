@@ -8,9 +8,15 @@ import {
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import FeatureCard from "@/components/FeatureCard";
 import { FileText, MessageSquare, Settings } from "lucide-react";
+import { useStore } from "@/hooks/useStore";
+import { useDispatch } from "react-redux";
+import { logout, reset } from "@/features/auth/authSlice";
+import { useEffect } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const user = useSelector((state) => state);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white p-4 mt-28">
@@ -28,15 +34,6 @@ const LandingPage = () => {
             with your documents.
           </p>
         </div>
-        {/* Login Card
-        <div className="w-full max-w-md bg-gray-50 rounded-lg p-8 shadow-sm text-center">
-          <h2 className="text-3xl font-semibold text-gray-800 mb-2">
-            Welcome to EXECOS
-          </h2>
-          <p className="text-gray-600 mb-8 mt-16">
-            Your intelligent document management solution
-          </p>
-        </div> */}
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Document Indexer */}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
-import human from "../assets/human.svg";
-import bot from "../assets/bot.svg";
+import human from "@/assets/human.svg";
+import bot from "@/assets/bot.svg";
 import api from "@/api/axios";
 
 const ChatPage = () => {

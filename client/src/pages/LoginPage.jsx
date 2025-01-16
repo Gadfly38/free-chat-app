@@ -32,9 +32,9 @@ const LoginPage = () => {
     rememberMe: false,
   });
 
-  useEffect(() => {
-    dispatch(reset());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(reset());
+  // }, []);
 
   useEffect(() => {
     if (isSuccess) {

@@ -40,6 +40,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
     console.log("user: ", user);
     return await authService.login(user);
+    // localStorage.setItem("token", user.accessToken);
   } catch (error) {
     console.log("error--------------: ", error);
     const message = error.response.data.detail?.message;
@@ -57,10 +58,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
-      state.isLoading = false;
-      state.isError = false;
-      state.isSuccess = false;
-      state.message = "";
+      return initialState;
     },
   },
   extraReducers: (builder) => {
@@ -105,9 +103,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
       })
       .addCase(logout.fulfilled, (state) => {
-        state.user = null;
-        state.token = null;
-        state.isSuccess = false;
+        return initialState;
       });
   },
 });

@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-``;
 import { useDispatch } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
 import UserAvatar from "@/components/UserAvatar";
