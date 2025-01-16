@@ -1,6 +1,7 @@
 import jwt
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
+from fastapi import HTTPException
 
 SECRET_KEY = "leon0713"
 ALGORITHM = "HS256"  
@@ -24,15 +25,35 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def decode_token(token: str):
-    """Decode a JWT access token."""
+def verify_jwt_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        
+        if 'exp' in payload:
+            expiration = datetime.fromtimestamp(payload['exp'])
+            if datetime.utcnow() > expiration:
+                raise HTTPException(
+                    status_code = 401,
+                    detail={
+                        "message":"Token has expired"
+                    }
+                )
         return payload
+        
     except jwt.ExpiredSignatureError:
-        raise Exception("Token has expired")
+        raise HTTPException(
+            status_code = 401,
+            detail={
+                "message":"Token has expired"
+            }
+        )
     except jwt.InvalidTokenError:
-        raise Exception("Invalid token")
+        raise HTTPException(
+            status_code = 401,
+            detail={
+                "message":"Invalid token"
+            }
+        )
 
 def hash_password(password: str) -> str:
     """Hash a password for storage."""

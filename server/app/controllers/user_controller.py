@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from app.config.database import supabase
 from app.models.user_model import UserSignUpModel, UserSignInModel, TokenModel
-from app.config.utils import create_refresh_token, create_access_token, verify_token, hash_password, verify_password
+from app.config.utils import create_refresh_token, create_access_token, verify_jwt_token, hash_password, verify_password
 
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -26,7 +26,7 @@ async def check_jwt_token(request:Request):
     if token.startswith("Bearer "):
         token = token.split(" ")[1]
     
-    payload = verify_token(token)
+    payload = verify_jwt_token(token)
     
     return {
         "isVerified": True
