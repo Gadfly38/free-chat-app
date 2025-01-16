@@ -1,6 +1,6 @@
 from fastapi import APIRouter,Request
-from app.controllers.user_controller import sign_up, sign_in, google_sign_in, check_jwt_token
-from app.models.user_model import UserSignUpModel, UserSignInModel, TokenModel
+from app.controllers.auth_controller import sign_up, sign_in, google_sign_in, check_jwt_token
+from app.models.auth_model import UserSignUpModel, UserSignInModel, TokenModel
 from datetime import datetime, timedelta
 
 router = APIRouter()

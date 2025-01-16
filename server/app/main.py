@@ -1,16 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routes import user_routes
+from app.routes import auth_routes
 
 app = FastAPI(
     title="Free Chat App",
-    description="Your API Description",
+    description="Upload the PDF and chat with chatbot based on uploaded PDF",
     version="1.0.0"
 )
 
+# Routes
+app.include_router(auth_routes.router) # Auth-Routes
+
+# Handle CORS Error
 origins = [
-    "http://localhost:3000", 
+    "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
@@ -22,8 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(user_routes.router)
-
+# Test Route
 @app.get("/test")
 def root():
     return {"message": "Welcome to FastAPI"}

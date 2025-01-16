@@ -6,9 +6,9 @@ from google.oauth2 import id_token
 import os
 from dotenv import load_dotenv
 
-from app.config.database import supabase
-from app.models.user_model import UserSignUpModel, UserSignInModel, TokenModel
-from app.config.utils import create_refresh_token, create_access_token, verify_jwt_token, hash_password, verify_password
+from app.db.supabase import supabase
+from app.models.auth_model import UserSignUpModel, UserSignInModel, TokenModel
+from app.utils.auth_utils import create_refresh_token, create_access_token, verify_jwt_token, hash_password, verify_password
 
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
