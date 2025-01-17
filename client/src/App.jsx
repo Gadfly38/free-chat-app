@@ -13,6 +13,7 @@ import ChatPage from "./pages/Dashboard/ChatPage";
 import Sidebar from "./components/Sidebar";
 import SettingsPage from "./pages/Dashboard/SettingsPage";
 import UpgradePlanPage from "./pages/Dashboard/UpgradePlanPage";
+import PrivateRoute from "./components/common/PrivateRoute";
 
 const DashboardLayout = () => {
   return (
@@ -34,7 +35,13 @@ const App = () => (
         <Route path="/app/auth/register" element={<RegisterPage />} />
 
         {/* Protected routes with Sidebar */}
-        <Route element={<DashboardLayout />}>
+        <Route
+          element={
+            <PrivateRoute>
+              <DashboardLayout />
+            </PrivateRoute>
+          }
+        >
           <Route path="/app/files" element={<FilesPage />} />
           <Route path="/app/chat" element={<ChatPage />} />
           <Route path="/app/settings" element={<SettingsPage />} />

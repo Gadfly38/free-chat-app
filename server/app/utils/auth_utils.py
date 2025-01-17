@@ -1,26 +1,20 @@
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone  
 from passlib.context import CryptContext
 from fastapi import HTTPException
 
 SECRET_KEY = "leon0713"
 ALGORITHM = "HS256"  
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
-REFRESH_TOKEN_EXPIRE_MINUTES = 60  
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def create_refresh_token(data: dict):
-    """Generate a JWT refresh token."""
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})  
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-def create_access_token(data: dict):
+def create_access_token(data: dict, isLifeTimeLong: bool):
     """Generate a JWT access token."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    if not isLifeTimeLong:
+        expire = datetime.utcnow() + timedelta(minutes=60)
+    else:
+        expire = datetime.utcnow() + timedelta(days=7)
     to_encode.update({"exp": expire})  
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -29,29 +23,34 @@ def verify_jwt_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         
-        if 'exp' in payload:
-            expiration = datetime.fromtimestamp(payload['exp'])
-            if datetime.utcnow() > expiration:
-                raise HTTPException(
-                    status_code = 401,
-                    detail={
-                        "message":"Token has expired"
-                    }
-                )
+        # if 'exp' in payload:
+        #     expiration = datetime.fromtimestamp(payload['exp'], tz=timezone.utc)
+        #     current_time = datetime.now(timezone.utc)
+            
+        #     print("Expiration time:", expiration)
+        #     print("Current UTC time:", current_time)
+            
+        #     if current_time > expiration:
+        #         raise HTTPException(
+        #             status_code=401,
+        #             detail={
+        #                 "message": "Token has expired"
+        #             }
+        #         )
         return payload
         
     except jwt.ExpiredSignatureError:
         raise HTTPException(
-            status_code = 401,
+            status_code=401, 
             detail={
-                "message":"Token has expired"
+                "message": "Token has expired"
             }
         )
     except jwt.InvalidTokenError:
         raise HTTPException(
-            status_code = 401,
+            status_code=401,
             detail={
-                "message":"Invalid token"
+                "message": "Invalid token"
             }
         )
 

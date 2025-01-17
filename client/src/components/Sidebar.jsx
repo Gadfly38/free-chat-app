@@ -5,11 +5,12 @@ import {
   MessageSquare,
   Settings,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
 import UserAvatar from "@/components/UserAvatar";
+import { useStore } from "@/hooks/useStore";
 // import AnimatedButton from "./AnimatedButton";
 
 const Sidebar = () => {
@@ -18,6 +19,14 @@ const Sidebar = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // const [useremail, setUseremail] = useState("");
+  const user = useSelector((state) => state.auth.user);
+  useEffect(() => {
+    // setUseremail(user);
+    console.log("useremail", user.email);
+  }, []);
+
   const location = useLocation(); // Add this hook
 
   const isActive = (path) => location.pathname === path;
@@ -113,7 +122,7 @@ const Sidebar = () => {
 
           <div className="p-4 border-t">
             <div className="flex bg-white rounded-xl p-4">
-              <UserAvatar name="Victor" email="gadflyarthurburton@gmail.com" />
+              <UserAvatar name="Victor" email={user.email} />
             </div>
             <button
               className="mt-8 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-xl p-2"

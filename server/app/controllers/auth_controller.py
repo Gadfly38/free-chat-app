@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from app.db.supabase import supabase
 from app.models.auth_model import UserSignUpModel, UserSignInModel, TokenModel
-from app.utils.auth_utils import create_refresh_token, create_access_token, verify_jwt_token, hash_password, verify_password
+from app.utils.auth_utils import create_access_token, verify_jwt_token, hash_password, verify_password
 
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -27,7 +27,6 @@ async def check_jwt_token(request:Request):
         token = token.split(" ")[1]
     
     payload = verify_jwt_token(token)
-    
     return {
         "isVerified": True
     }
@@ -47,7 +46,7 @@ async def google_sign_in(token:TokenModel):
             })
 
         email = id_info.get("email")
-        access_token = create_access_token(data={"sub": email})
+        access_token = create_access_token(data={"sub": email}, isLifeTimeLong = False)
 
         return {
             "status": "success",
@@ -113,7 +112,7 @@ async def sign_in(user:UserSignInModel):
                 "message" : "Incorrect Password"
             })
 
-        access_token = create_access_token(data={"sub": existing_user.data[0]['email']})
+        access_token = create_access_token(data={"sub": existing_user.data[0]['email']}, isLifeTimeLong = user.rememberMe)
         response = {
             "status": "success",
             "message": "Login successfully",
@@ -122,14 +121,7 @@ async def sign_in(user:UserSignInModel):
                 "email": existing_user.data[0]["email"]
             },
             "accessToken": access_token,
-            "expiresIn": 3600
         }
-
-        if user.rememberMe:
-            response["refreshToken"] = create_refresh_token(data={
-                "sub": existing_user.data[0]['password']
-            })
-
         return response
 
     except HTTPException as he:
