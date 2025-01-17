@@ -1,7 +1,9 @@
-from fastapi import APIRouter,Request
-from app.controllers.auth_controller import sign_up, sign_in, google_sign_in, check_jwt_token
-from app.models.auth_model import UserSignUpModel, UserSignInModel, TokenModel
+from fastapi import APIRouter,Request, Depends
 from datetime import datetime, timedelta
+
+from app.controllers.auth_controller import sign_up, sign_in, google_sign_in, get_chat_history
+from app.models.auth_model import UserSignUpModel, UserSignInModel, TokenModel
+from app.middleware.auth_middleware import check_jwt_token
 
 router = APIRouter()
 
@@ -17,6 +19,6 @@ async def insert_user(user:UserSignInModel):
 async def check_token(token:TokenModel):
     return await google_sign_in(token)
 
-@router.get("/api/auth/verify_token")
-async def verify_token(request: Request):
-    return await check_jwt_token(request)
+@router.get("/api/chat/get_chat_history", dependencies=[Depends(check_jwt_token)])
+async def return_chat_history():
+    return await get_chat_history()

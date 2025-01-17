@@ -13,23 +13,11 @@ from app.utils.auth_utils import create_access_token, verify_jwt_token, hash_pas
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
-async def check_jwt_token(request:Request):
-    token = request.headers.get("Authorization")
-    if not token:
-        raise HTTPException(
-            status_code= 401,
-            detail={
-                "message":"Authorization header missing"
-            }
-        )
-    
-    if token.startswith("Bearer "):
-        token = token.split(" ")[1]
-    
-    payload = verify_jwt_token(token)
-    return {
-        "isVerified": True
+async def get_chat_history():
+    return{
+        "chatHistory" : "Hi"
     }
+
 async def google_sign_in(token:TokenModel):
     try:
         token_str = token.token
