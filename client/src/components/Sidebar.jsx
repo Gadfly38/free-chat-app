@@ -22,10 +22,10 @@ const Sidebar = () => {
 
   // const [useremail, setUseremail] = useState("");
   const user = useSelector((state) => state.auth.user);
-  useEffect(() => {
-    // setUseremail(user);
-    console.log("useremail", user.email);
-  }, []);
+  // useEffect(() => {
+  //   // setUseremail(user);
+  //   console.log("useremail", user.email);
+  // }, []);
 
   const location = useLocation(); // Add this hook
 
@@ -122,7 +122,7 @@ const Sidebar = () => {
 
           <div className="p-4 border-t">
             <div className="flex bg-white rounded-xl p-4">
-              <UserAvatar name="Victor" email={user.email} />
+              <UserAvatar name="Victor" email={user?.email} />
             </div>
             <button
               className="mt-8 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-xl p-2"

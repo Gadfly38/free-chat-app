@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "@/features/auth/authSlice";
 import * as yup from "yup";
-import api from "@/api/axios";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
-import axios from "axios";
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -22,52 +22,30 @@ const loginSchema = yup.object().shape({
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [errors, setErrors] = useState({});
+  const { isError, message, isSuccess, token } = useSelector(
+    (state) => state.auth
+  );
 
-  const { isError, message, isSuccess } = useSelector((state) => state.auth);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberMe: false,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
   });
 
-  useEffect(() => {
-    dispatch(reset());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(reset());
+  // }, [dispatch]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (token) {
       navigate("/app/chat");
     }
-  }, [isSuccess]);
+  }, [token]);
 
-  const handleChange = (e) => {
-    const { id, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: type === "checkbox" ? checked : value,
-    }));
-    // Clear error when user starts typing
-    if (errors[id]) {
-      setErrors((prev) => ({ ...prev, [id]: "" }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await loginSchema.validate(formData, { abortEarly: false });
-      dispatch(login(formData));
-    } catch (err) {
-      console.log("err", err);
-      const newErrors = {};
-      err.inner.forEach((error) => {
-        newErrors[error.path] = error.message;
-      });
-      setErrors(newErrors);
-    }
-    console.log(isSuccess);
+  const onSubmit = (data) => {
+    dispatch(login(data));
   };
 
   return (
@@ -79,35 +57,35 @@ const LoginPage = () => {
           <div className="border-b border-gray-300 leading-[0.1em] text-center my-8">
             <span className="px-4 bg-white md:bg-gray-100">Or</span>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
               <input
                 type="email"
-                id="email"
-                value={formData.email}
-                onChange={handleChange}
+                {...register("email")}
                 placeholder="Email"
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {errors.email && (
-                <p className="mt-1 text-red-500 text-sm">{errors.email}</p>
+                <p className="mt-1 text-red-500 text-sm">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div className="mb-6">
               <input
                 type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
+                {...register("password")}
                 placeholder="Password"
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {errors.password && (
-                <p className="mt-1 text-red-500 text-sm">{errors.password}</p>
+                <p className="mt-1 text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
               {isError && message && (
                 <p className="mt-1 text-red-500 text-sm">{message}</p>
@@ -117,14 +95,10 @@ const LoginPage = () => {
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  id="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
+                  {...register("rememberMe")}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor="rememberMe" className="ml-2 text-gray-700">
-                  Remember me
-                </label>
+                <label className="ml-2 text-gray-700">Remember me</label>
               </div>
               <button
                 type="button"

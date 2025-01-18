@@ -14,6 +14,8 @@ import Sidebar from "./components/Sidebar";
 import SettingsPage from "./pages/Dashboard/SettingsPage";
 import UpgradePlanPage from "./pages/Dashboard/UpgradePlanPage";
 import PrivateRoute from "./components/common/PrivateRoute";
+import api from "./api/axios";
+import useSetupAxios from "./hooks/useSetupAxios";
 
 const DashboardLayout = () => {
   return (
@@ -26,30 +28,34 @@ const DashboardLayout = () => {
   );
 };
 
-const App = () => (
-  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/app/auth/login" element={<LoginPage />} />
-        <Route path="/app/auth/register" element={<RegisterPage />} />
+const App = () => {
+  useSetupAxios(api);
 
-        {/* Protected routes with Sidebar */}
-        <Route
-          element={
-            <PrivateRoute>
-              <DashboardLayout />
-            </PrivateRoute>
-          }
-        >
-          <Route path="/app/files" element={<FilesPage />} />
-          <Route path="/app/chat" element={<ChatPage />} />
-          <Route path="/app/settings" element={<SettingsPage />} />
-          <Route path="/app/payment" element={<UpgradePlanPage />} />
-        </Route>
-      </Routes>
-    </Router>
-  </GoogleOAuthProvider>
-);
+  return (
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/app/auth/login" element={<LoginPage />} />
+          <Route path="/app/auth/register" element={<RegisterPage />} />
+
+          {/* Protected routes with Sidebar */}
+          <Route
+            element={
+              <PrivateRoute>
+                <DashboardLayout />
+              </PrivateRoute>
+            }
+          >
+            <Route path="/app/files" element={<FilesPage />} />
+            <Route path="/app/chat" element={<ChatPage />} />
+            <Route path="/app/settings" element={<SettingsPage />} />
+            <Route path="/app/payment" element={<UpgradePlanPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
+  );
+};
 
 export default App;

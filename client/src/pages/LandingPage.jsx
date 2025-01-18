@@ -1,10 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  GoogleOAuthProvider,
-  useGoogleLogin,
-  GoogleLogin,
-} from "@react-oauth/google";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import FeatureCard from "@/components/FeatureCard";
 import { FileText, MessageSquare, Settings } from "lucide-react";
@@ -15,8 +10,6 @@ import { useEffect } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const user = useSelector((state) => state);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white p-4 mt-28">

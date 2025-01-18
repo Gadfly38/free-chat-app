@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Send } from "lucide-react";
 import human from "@/assets/human.svg";
 import bot from "@/assets/bot.svg";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import api from "@/api/axios";
 
 const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      try {
+        const response = await api.get("/chat/get_chat_history");
+        console.log("Chat-History:", response.data.chatHistory);
+      } catch (error) {
+        console.error("Failed to fetch chat history:", error);
+      }
+    };
+
+    fetchChatHistory();
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

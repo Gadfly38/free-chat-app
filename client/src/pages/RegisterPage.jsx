@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register, reset } from "@/features/auth/authSlice";
 import * as yup from "yup";
+import { useForm } from "react-hook-form";
 
 const registerSchema = yup.object().shape({
   email: yup
@@ -23,43 +24,20 @@ const RegisterPage = () => {
   const message = useSelector((state) => state.auth.message);
   const success = useSelector((state) => state.auth.isSuccess);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(registerSchema),
   });
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     dispatch(reset());
   }, []);
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
-    if (errors[id]) {
-      setErrors((prev) => ({ ...prev, [id]: "" }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      await registerSchema.validate(formData, { abortEarly: false });
-      dispatch(register(formData));
-    } catch (err) {
-      const newErrors = {};
-      err.inner.forEach((error) => {
-        newErrors[error.path] = error.message;
-      });
-      setErrors(newErrors);
-    }
-    if (success) {
-      navigate("/app/auth/login");
-    }
+  const onSubmit = (data) => {
+    dispatch(register(data));
   };
 
   return (
@@ -69,37 +47,37 @@ const RegisterPage = () => {
           <h2 className="text-4xl font-bold mb-12 text-center">
             Sign up for a free account
           </h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
               <input
                 type="email"
-                id="email"
-                value={formData.email}
-                onChange={handleChange}
+                {...register("email")}
                 placeholder="Email"
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {errors.email && (
-                <p className="mt-1 text-red-500 text-sm">{errors.email}</p>
+                <p className="mt-1 text-red-500 text-sm">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div className="mb-6">
               <input
                 type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
+                {...register("password")}
                 placeholder="Password"
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
               />
               {errors.password && (
-                <p className="mt-1 text-red-500 text-sm">{errors.password}</p>
+                <p className="mt-1 text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
-              {message && (
+              {isError && message && (
                 <p className="mt-1 text-red-500 text-sm">{message}</p>
               )}
             </div>
