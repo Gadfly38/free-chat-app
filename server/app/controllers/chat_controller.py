@@ -4,7 +4,7 @@ from io import BytesIO
 import PyPDF2
 
 from app.models.auth_model import EmailModel
-from app.utils.chat_utils import upload_to_drive
+# from app.utils.chat_utils import upload_to_drive
 from app.db.supabase import supabase
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']

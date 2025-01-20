@@ -3,7 +3,12 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from fastapi import HTTPException
 
-SECRET_KEY = "LEON0713"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"  
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
