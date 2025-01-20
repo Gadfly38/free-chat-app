@@ -11,7 +11,7 @@ def create_access_token(data: dict, isLifeTimeLong: bool):
     """Generate a JWT access token."""
     to_encode = data.copy()
     if not isLifeTimeLong:
-        expire = datetime.utcnow() + timedelta(minutes=0.3)
+        expire = datetime.utcnow() + timedelta(minutes=60)
     else:
         expire = datetime.utcnow() + timedelta(days=7)
     to_encode.update({"exp": expire})

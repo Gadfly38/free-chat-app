@@ -16,9 +16,7 @@ export const register = createAsyncThunk(
     try {
       return await authService.register(user);
     } catch (error) {
-      console.log("error--------------: ", error);
       const message = error.response.data.detail?.message;
-      console.log("message: ", message);
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -30,7 +28,6 @@ export const googleLogin = createAsyncThunk(
     try {
       return await authService.googleLogin(user);
     } catch (error) {
-      console.log("error--------------: ", error);
       return thunkAPI.rejectWithValue(error.response.data.detail?.message);
     }
   }
@@ -38,26 +35,18 @@ export const googleLogin = createAsyncThunk(
 
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
-    console.log("user: ", user);
     return await authService.login(user);
-    // localStorage.setItem("token", user.accessToken);
   } catch (error) {
-    console.log("error--------------: ", error);
     const message = error.response.data.detail?.message;
-    console.log("message: ", message);
     return thunkAPI.rejectWithValue(message);
   }
-});
-
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await authService.logout();
 });
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    reset: (state) => {
+    logout: () => {
       return initialState;
     },
   },
@@ -98,14 +87,10 @@ const authSlice = createSlice({
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        x``;
         state.isSuccess = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
       })
-      .addCase(logout.fulfilled, (state) => {
-        return initialState;
-      });
   },
 });
 

@@ -1,10 +1,12 @@
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, File, UploadFile, HTTPException
 from datetime import datetime
 from uuid import UUID
 from google.auth.transport import requests
 from google.oauth2 import id_token
 import os
 from dotenv import load_dotenv
+import PyPDF2
+from io import BytesIO
 
 from app.db.supabase import supabase
 from app.models.auth_model import UserSignUpModel, UserSignInModel, TokenModel
@@ -119,3 +121,32 @@ async def sign_in(user:UserSignInModel):
         raise HTTPException(status_code=500, detail={
             "message" : str(e)
         })
+
+async def handle_pdf(file: UploadFile = File(...)):
+    try:
+        if not file.content_type == "application/pdf":
+            raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+
+        contents = await file.read()
+        pdf_file = BytesIO(contents)
+
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        
+        text_content = []
+        for page in pdf_reader.pages:
+            text_content.append(page.extract_text())
+
+        response = {
+            "filename": file.filename,
+            "pages": len(pdf_reader.pages),
+            "content": text_content
+        }
+
+        return response
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while processing the file: {str(e)}")
+    
+    finally:
+        await file.close()
+        pdf_file.close()

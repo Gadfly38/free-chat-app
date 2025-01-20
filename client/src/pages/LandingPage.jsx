@@ -1,12 +1,7 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import FeatureCard from "@/components/FeatureCard";
 import { FileText, MessageSquare, Settings } from "lucide-react";
-import { useStore } from "@/hooks/useStore";
-import { useDispatch } from "react-redux";
-import { logout, reset } from "@/features/auth/authSlice";
-import { useEffect } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
