@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import api from "@/api/axios";
 
 const fetchDocuments = async (email) => {
-  const response = await api.get("/documents", { params: { email } });
+  const response = await api.post("/documents", { email: email });
   return response.data;
 };
 
