@@ -54,7 +54,7 @@ async def sign_up(user:UserSignUpModel):
         
         new_user = {
             "email": user.email,
-            "password": user.password
+            "password": hash_password(user.password)
         }
         
         result = supabase.table('users').insert(new_user).execute()
@@ -90,7 +90,7 @@ async def sign_in(user:UserSignInModel):
                 "message" : "Email not found"
             })
 
-        if existing_user.data[0]["password"] != user.password:
+        if not verify_password(user.password, existing_user.data[0]["password"]):
             raise HTTPException(status_code=400, detail={
                 "message" : "Incorrect Password"
             })
