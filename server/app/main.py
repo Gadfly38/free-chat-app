@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes import auth_routes
+from app.routes import chat_routes
 
 app = FastAPI(
     title="Free Chat App",
@@ -11,6 +12,7 @@ app = FastAPI(
 
 # Routes
 app.include_router(auth_routes.router) # Auth-Routes
+app.include_router(chat_routes.router) # Chat-Routes
 
 # Handle CORS Error
 origins = [
