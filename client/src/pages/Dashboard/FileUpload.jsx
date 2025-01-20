@@ -25,6 +25,7 @@ const FileUpload = () => {
     enabled: !!userEmail, // Only run the query if userEmail is available
   });
 
+  console.log("uploadedFiles", uploadedFiles.file_data);
   // Handle file selection
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -75,13 +76,13 @@ const FileUpload = () => {
       {/* Display Uploaded Files */}
       <div className="mb-4">
         <h3 className="text-lg font-semibold mb-2">Uploaded Files:</h3>
-        {uploadedFiles.length > 0 ? (
+        {uploadedFiles.file_data.length > 0 ? (
           <ul>
-            {uploadedFiles.map((file, index) => (
+            {uploadedFiles.file_data.map((file, index) => (
               <li key={index} className="p-3 bg-gray-50 rounded mb-2">
-                <p className="font-medium">{file.name}</p>
+                <p className="font-medium">{file.file_name}</p>
                 <p className="text-sm text-gray-500">
-                  {(file.size / 1024).toFixed(2)} KB
+                  {(file.file_size / 1024).toFixed(2)} KB
                 </p>
               </li>
             ))}
