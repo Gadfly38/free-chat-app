@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Request, File, UploadFile, HTTPException
+from fastapi import HTTPException, Request, File, UploadFile, HTTPException, Form
 from datetime import datetime
 from uuid import UUID
 from google.auth.transport import requests
@@ -122,7 +122,7 @@ async def sign_in(user:UserSignInModel):
             "message" : str(e)
         })
 
-async def handle_pdf(file: UploadFile = File(...)):
+async def handle_pdf(email: str = Form(...), file: UploadFile = File(...)):
     try:
         if not file.content_type == "application/pdf":
             raise HTTPException(status_code=400, detail="Only PDF files are allowed")
@@ -137,6 +137,7 @@ async def handle_pdf(file: UploadFile = File(...)):
             text_content.append(page.extract_text())
 
         response = {
+            "email": email,
             "filename": file.filename,
             "pages": len(pdf_reader.pages),
             "content": text_content

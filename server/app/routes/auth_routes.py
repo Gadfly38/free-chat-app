@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Request, Depends, File, UploadFile
+from fastapi import APIRouter,Request, Depends, File, UploadFile, Form
 from datetime import datetime, timedelta
 
 from app.controllers.auth_controller import sign_up, sign_in, google_sign_in, get_chat_history, handle_pdf
@@ -23,6 +23,6 @@ async def check_token(token:TokenModel):
 async def return_chat_history():
     return await get_chat_history()
 
-@router.post("/api/upload_pdf", dependencies=[Depends(check_jwt_token)])
-async def upload_pdf(file: UploadFile = File(...)):
-    return await handle_pdf(file)
+@router.post("/api/document/upload_pdf", dependencies=[Depends(check_jwt_token)])
+async def upload_pdf(email: str = Form(...), file: UploadFile = File(...)):
+    return await handle_pdf(email, file)
