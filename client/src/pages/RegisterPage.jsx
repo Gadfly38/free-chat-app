@@ -1,9 +1,6 @@
-import api from "@/api/axios";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register, reset } from "@/features/auth/authSlice";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 
@@ -22,7 +19,6 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const message = useSelector((state) => state.auth.message);
-  const success = useSelector((state) => state.auth.isSuccess);
 
   const {
     register,
@@ -31,10 +27,6 @@ const RegisterPage = () => {
   } = useForm({
     resolver: yupResolver(registerSchema),
   });
-
-  useEffect(() => {
-    dispatch(reset());
-  }, []);
 
   const onSubmit = (data) => {
     dispatch(register(data));

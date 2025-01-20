@@ -18,15 +18,10 @@ const googleLogin = async (payload) => {
   return response.data;
 };
 
-const logout = () => {
-  localStorage.removeItem("token");
-};
-
 const authService = {
   register,
   login,
   googleLogin,
-  logout,
 };
 
 export default authService;

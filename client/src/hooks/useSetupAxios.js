@@ -6,7 +6,6 @@ export default function useSetupAxios(instance) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Optional: Add request interceptor to log URLs (helpful for debugging)
     instance.interceptors.request.use(
       (config) => {
         const token = localStorage.getItem("token");

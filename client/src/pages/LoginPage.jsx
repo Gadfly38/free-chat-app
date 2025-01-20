@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, reset } from "@/features/auth/authSlice";
+import { login } from "@/features/auth/authSlice";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,7 +22,7 @@ const loginSchema = yup.object().shape({
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isError, message, isSuccess, token } = useSelector(
+  const { isError, message, token } = useSelector(
     (state) => state.auth
   );
 
@@ -33,10 +33,6 @@ const LoginPage = () => {
   } = useForm({
     resolver: yupResolver(loginSchema),
   });
-
-  // useEffect(() => {
-  //   dispatch(reset());
-  // }, [dispatch]);
 
   useEffect(() => {
     if (token) {
