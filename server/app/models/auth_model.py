@@ -8,6 +8,9 @@ class UserSignUpModel(BaseModel):
 class TokenModel(BaseModel):
     token:str
 
+class EmailModel(BaseModel):
+    email:str
+
 class UserSignInModel(BaseModel):
     email:str
     password:str

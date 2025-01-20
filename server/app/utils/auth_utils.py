@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from fastapi import HTTPException
 
-SECRET_KEY = "leon0713"
+SECRET_KEY = "LEON0713"
 ALGORITHM = "HS256"  
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -21,16 +21,6 @@ def create_access_token(data: dict, isLifeTimeLong: bool):
 def verify_jwt_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        
-        # if 'exp' in payload:
-        #     expiration = datetime.fromtimestamp(payload['exp'])
-        #     if datetime.utcnow() > expiration:
-        #         raise HTTPException(
-        #             status_code = 401,
-        #             detail={
-        #                 "message":"Token has expired"
-        #             }
-        #         )
         return payload
         
     except jwt.ExpiredSignatureError:

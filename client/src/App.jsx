@@ -4,6 +4,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -16,6 +17,7 @@ import UpgradePlanPage from "./pages/Dashboard/UpgradePlanPage";
 import PrivateRoute from "./components/common/PrivateRoute";
 import api from "./api/axios";
 import useSetupAxios from "./hooks/useSetupAxios";
+import FileUpload from "./pages/Dashboard/FileUpload";
 
 const DashboardLayout = () => {
   return (
@@ -39,8 +41,14 @@ const App = () => {
           <Route path="/app/auth/login" element={<LoginPage />} />
           <Route path="/app/auth/register" element={<RegisterPage />} />
 
-          <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
-            <Route path="/app/files" element={<FilesPage />} />
+          <Route
+            element={
+              <PrivateRoute>
+                <DashboardLayout />
+              </PrivateRoute>
+            }
+          >
+            <Route path="/app/files" element={<FileUpload />} />
             <Route path="/app/chat" element={<ChatPage />} />
             <Route path="/app/settings" element={<SettingsPage />} />
             <Route path="/app/payment" element={<UpgradePlanPage />} />

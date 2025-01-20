@@ -17,8 +17,11 @@ const FilesPage = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const userId = useSelector((state) => state.auth.user.id);
+  // const userId = useSelector((state) => state.auth.user.id);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  const userEmail = useSelector((state) => state.auth.user.email);
+  console.log("userEmaildfs", userEmail);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -197,11 +200,12 @@ const FilesPage = () => {
     try {
       const uploadPromises = selectedFiles.map(async (fileObj) => {
         const formData = new FormData();
-        formData.append("userId", userId);
+        // formData.append("userId", userId);
         // Handle different file sources
         if (fileObj.source === "local") {
           // For local files, use the originalFile which is the actual File object
           formData.append("file", fileObj.originalFile);
+          console.log("form daate", formData);
         } else if (fileObj.source === "google") {
           // For Google Drive files, we need to download them first
           try {
@@ -227,12 +231,8 @@ const FilesPage = () => {
         }
 
         try {
-          console.log("form dfdfsfsf", { ...formData, userId });
+          console.log("form dfdfsfsf", { file: formData, userEmail });
           const response = await api.post("documents/upload", formData, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "multipart/form-data",
-            },
             onUploadProgress: (progressEvent) => {
               // Artificial delay using setTimeout
               setTimeout(() => {
