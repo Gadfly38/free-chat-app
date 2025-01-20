@@ -70,16 +70,6 @@ const Sidebar = () => {
         <div className="flex flex-col justify-between h-full py-8">
           <nav className="p-4 mt-16">
             <div className="space-y-2">
-              {/* <button
-              className={`flex text-xl font-bold items-center gap-3 w-full p-3 rounded-lg ${
-                isActive("/app/dashboard")
-                  ? "bg-gray-200 text-black"
-                  : "text-gray-700 hover:bg-gray-200"
-              }`}
-              onClick={() => navigate("/app/dashboard")}
-            >
-              Home
-            </button> */}
               <button
                 className={`flex items-center gap-3 w-full p-3 rounded-lg ${
                   isActive("/app/chat")
@@ -132,17 +122,6 @@ const Sidebar = () => {
             </button>
           </div>
         </div>
-        {/* <button
-          className={`flex items-center gap-3 w-full p-3 rounded-lg ${
-            isActive("/app/payment")
-              ? "bg-gray-200 text-black"
-              : "text-gray-700 hover:bg-gray-200"
-          }`}
-          onClick={() => navigate("/app/payment")}
-        >
-          <Settings size={20} />
-          UpgradePlan
-        </button> */}
         <button
           className="flex justify-center"
           onClick={() => navigate("/app/payment")}

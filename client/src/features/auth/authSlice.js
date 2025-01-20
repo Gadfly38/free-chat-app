@@ -58,6 +58,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
+      state.message = null;
       return initialState;
     },
   },
@@ -98,7 +99,6 @@ const authSlice = createSlice({
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        x``;
         state.isSuccess = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
